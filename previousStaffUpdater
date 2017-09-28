@@ -1,0 +1,42 @@
+public class previousStaffUpdater implements IRecordUpdater { 
+    
+    //private static final String OBJECT_INCIDENT = 'BMCServiceDesk__Incident__c';
+    
+    private final static String FIELD_ID = 'Id';
+    private final static String FIELD_STAFF = 'BMCServiceDesk__FKOpenBy__c';
+    private final static String FIELD_PREVIOUS_STAFF = 'Previous_Staff__c';
+    
+    //private sObject inc = Schema.getGlobalDescribe().get(OBJECT_INCIDENT).newSObject();
+    
+    Object currentStaff;
+    Object previousStaff;
+    boolean criteriaMet = false;
+        
+    public void process(sObject s){
+        this.currentStaff = s.get(FIELD_STAFF);
+            this.previousStaff = trigger.oldMap.get(s.Id).get(FIELD_STAFF);
+            
+            if(this.currentStaff != null && this.previousStaff != null && 
+               this.currentStaff != '' && this.previousStaff != '' && 
+               this.currentStaff != previousStaff){ 
+                   criteriaMet = true;
+                   //inc.put(FIELD_ID ,s.Id);
+                   //inc.put(FIELD_PREVIOUS_STAFF ,(String)previousStaff);
+               }
+    }
+        
+        //public sObject getRecord(){
+        //    return inc;
+        //}
+        
+        public boolean getCriteriaMet(){
+            return criteriaMet;
+        }
+        
+        public String getFieldValue(){
+            return (String)previousStaff;
+        }
+        
+
+    
+}
