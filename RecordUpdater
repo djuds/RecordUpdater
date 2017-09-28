@@ -1,0 +1,50 @@
+/*
+ * RecordUpdater Class by David Judkins
+ * 
+ * Used with Remedyforce, but could be modified to use any Salesforce oject.
+ * 
+ * Overview: When criteria is met, update a field.
+ *
+ * How to use: 
+ * --Create a new class that implements the IRecordUpdater class.
+ * --Create a new Custom Setting value that references the new class and the field to update.
+*/
+public class RecordUpdater {
+    
+    private Map<String,String> classFieldMap = new Map<String,String>();
+
+    public RecordUpdater(){
+        
+        Map<String,RecordUpdateMapping__c> rMap;
+        rMap = RecordUpdateMapping__c.getAll();
+        
+        for(String s: rMap.keySet()){
+            classFieldMap.put(s,rMap.get(s).Value__c);
+        }
+        
+    }
+    
+    public static void Process(){
+        
+        RecordUpdater r = new RecordUpdater();
+        
+        for(SObject s: trigger.new){
+            for(String className: r.classFieldMap.keySet()){
+ 
+                Type t = Type.forName(className);
+                IRecordUpdater b = (IRecordUpdater)t.newInstance();
+                b.process(s);
+                
+                if(b.getCriteriaMet()) s.put(r.classFieldMap.get(className),b.getFieldValue());
+            }
+
+        }
+        
+    }
+    
+    
+    
+    
+    
+
+}
