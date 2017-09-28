@@ -1,0 +1,7 @@
+global interface IRecordUpdater {
+
+    void process(SObject s);
+    //sObject getRecord();
+    boolean getCriteriaMet();
+    String getFieldValue();
+}
